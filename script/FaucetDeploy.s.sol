@@ -15,7 +15,7 @@ contract ETHFaucetScript is Script {
 
     function run() public {
         // Uncomment the line below only if you want to deploy it on-chain
-        // vm.startBroadcast(); // Start broadcasting transactions to the blockchain
+        vm.startBroadcast(); // Start broadcasting transactions to the blockchain
 
         // Deploy the faucet contract
         faucet = new ETHFaucet(allowedAmount, waitTime);
@@ -23,6 +23,6 @@ contract ETHFaucetScript is Script {
         console.log("ETHFaucet deployed at:", address(faucet));
 
         // Uncomment the line below only if you want to deploy it on-chain
-        // vm.stopBroadcast(); // Stop broadcasting
+        vm.stopBroadcast(); // Stop broadcasting
     }
 }

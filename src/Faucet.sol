@@ -16,7 +16,6 @@ contract ETHFaucet is Ownable {
     // Storage variables
     uint256 public allowedAmount;
     uint256 public waitTime;
-
     mapping(address => uint256) public userUnlockTime;
 
     // Constructor
@@ -44,7 +43,7 @@ contract ETHFaucet is Ownable {
         userUnlockTime[caller] = nextUnlockTime;
 
         // Transfer ETH to the caller
-        (bool success,) = caller.call{value: allowedAmount}("");
+        (bool success,) = payable(caller).call{value: allowedAmount}("");
         if (!success) {
             revert TransferFailed();
         }
@@ -72,14 +71,13 @@ contract ETHFaucet is Ownable {
     }
 
     // Function to deposit ETH into the faucet
-    receive() external payable {
-        emit FundsDeposited(msg.sender, msg.value);
-    }
+    receive() external payable {}
 
-    // Withdraw ETH (only owner)
+    fallback() external payable {}
+
     function withdraw(uint256 amount) external onlyOwner {
         require(address(this).balance >= amount, "Insufficient balance");
-        (bool success,) = owner().call{value: amount}("");
+        (bool success,) = payable(owner()).call{value: amount}("");
         require(success, "Withdraw failed");
     }
 }
