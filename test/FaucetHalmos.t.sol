@@ -29,6 +29,8 @@ contract ETHFaucetTest is SymTest, Test {
         vm.assume(user != address(0));
         vm.assume(user != owner);
 
+        vm.deal(user, 0);
+
         uint256 initialUserBalance = user.balance;
         uint256 initialFaucetBalance = address(faucet).balance;
         uint256 allowedAmount = faucet.allowedAmount();
@@ -71,6 +73,7 @@ contract ETHFaucetTest is SymTest, Test {
     function check_withdraw(uint256 amount) public {
         vm.assume(amount <= address(faucet).balance);
 
+        deal(owner, 0);
         uint256 initialOwnerBalance = owner.balance;
         uint256 initialFaucetBalance = address(faucet).balance;
 
