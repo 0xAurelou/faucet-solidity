@@ -16,10 +16,10 @@ contract ETHFaucetTest is SymTest, Test {
         owner = svm.createAddress("owner");
 
         vm.assume(waitTime < 7 days);
+        vm.assume(owner != address(0));
 
-        vm.startPrank(owner);
+        vm.prank(owner);
         faucet = new ETHFaucet(allowedAmount, waitTime);
-        vm.stopPrank();
 
         // Fund the faucet
         vm.deal(address(faucet), 100 ether);
@@ -27,7 +27,7 @@ contract ETHFaucetTest is SymTest, Test {
 
     function check_claim_eth(address user) public {
         vm.assume(user != address(0));
-        vm.assume(user != owner);
+        vm.assume(user != address(faucet));
 
         vm.deal(user, 0);
 
@@ -44,9 +44,8 @@ contract ETHFaucetTest is SymTest, Test {
             vm.warp(unlockTime);
         }
 
-        vm.startPrank(user);
+        vm.prank(user);
         faucet.claimETH();
-        vm.stopPrank();
 
         // Verify balances
         assertEq(user.balance, initialUserBalance + allowedAmount);
